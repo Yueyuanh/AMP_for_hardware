@@ -563,7 +563,7 @@ class LeggedRobot(BaseTask):
                 )
                 foot_pos.append(
                     self.chain_ee[1]
-                    .forward_kinematics(self.dof_pos[:, 10:15])
+                    .forward_kinematics(self.dof_pos[:, 5:10])
                     .get_matrix()[:, :3, 3]
                 )
                 # A1
@@ -1425,6 +1425,16 @@ class LeggedRobot(BaseTask):
             device=self.device,
             requires_grad=False,
         )
+
+        print("=========刚体顺序=========")
+        print(body_names)
+        print("=========DOF顺序=========")
+        print(f"DOF数量:{self.num_dof}\n ")
+        print(f"DOF属性:")
+        print(dof_props.dtype.names)
+        print(f"{dof_props}\n")
+        print(self.dof_names) # 动作输出顺序
+        print("=========================")
 
     def _get_env_origins(self):
         """Sets environment origins. On rough terrain the origins are defined by the terrain platforms.

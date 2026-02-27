@@ -12,15 +12,26 @@ from rsl_rl.utils import utils
 
 
 class AMPLoader:
-    # bdx
+
+    # pikachu leg
     POS_SIZE = 3
     ROT_SIZE = 4
-    JOINT_POS_SIZE = 15
+    JOINT_POS_SIZE = 10
     TAR_TOE_POS_LOCAL_SIZE = 6
     LINEAR_VEL_SIZE = 3
     ANGULAR_VEL_SIZE = 3
-    JOINT_VEL_SIZE = 15
+    JOINT_VEL_SIZE = 10
     TAR_TOE_VEL_LOCAL_SIZE = 6
+
+    # # bdx
+    # POS_SIZE = 3
+    # ROT_SIZE = 4
+    # JOINT_POS_SIZE = 15
+    # TAR_TOE_POS_LOCAL_SIZE = 6
+    # LINEAR_VEL_SIZE = 3
+    # ANGULAR_VEL_SIZE = 3
+    # JOINT_VEL_SIZE = 15
+    # TAR_TOE_VEL_LOCAL_SIZE = 6
 
     # A1
     # POS_SIZE = 3
