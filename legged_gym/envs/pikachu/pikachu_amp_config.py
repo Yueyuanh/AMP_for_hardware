@@ -44,7 +44,7 @@ NO_FEET = False  # Do not use feet in the amp observations and data
 
 class PikachuAMPCfg(LeggedRobotCfg):
     class env(LeggedRobotCfg.env):
-        num_envs = 1024
+        num_envs = 4096
 
         # num_observations   = num_privileged_obs - 6 (Remove velocity observations from policy observation.)
         # num_privileged_obs = 3 + 3 + 3 + 3 + num_dof + num_dof + num_actions

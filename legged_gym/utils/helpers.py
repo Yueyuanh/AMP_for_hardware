@@ -259,15 +259,37 @@ def export_policy_as_jit(actor_critic, path, rma=False):
         nb_latent = 18
 
         if rma:
-            dummy_input_model = torch.zeros((nb_obs + nb_latent), device="cpu")
-            dummy_input_model_adaptation = torch.zeros(
-                (nb_obs * nb_history_steps), device="cpu"
-            )
+            # dummy_input_model = torch.zeros((nb_obs + nb_latent), device="cpu")
+            model = copy.deepcopy(actor_critic.actor).to("cpu")
+            input_dim = model[0].in_features  # 第一层Linear的输入
+
+            dummy_input_model = torch.zeros((1, input_dim), device="cpu")
+
+            # dummy_input_model_adaptation = torch.zeros(
+            #     (nb_obs * nb_history_steps), device="cpu"
+            # )
+            adaptation_module = copy.deepcopy(actor_critic.adaptation_module).to("cpu")
+            adapt_input_dim = adaptation_module[0].in_features
+
+            dummy_input_model_adaptation = torch.zeros((1, adapt_input_dim), device="cpu")
         else:
             dummy_input_model = torch.zeros((nb_obs), device="cpu")
 
+        # torch.onnx.export(
+        #     traced_script_module,
+        #     dummy_input_model,
+        #     "ONNX.onnx",
+        #     verbose=True,
+        #     input_names=["obs"],
+        #     output_names=["actions"],
+        # )
+        model = copy.deepcopy(actor_critic.actor).to("cpu")
+
+        input_dim = model[0].in_features
+        dummy_input_model = torch.zeros((1, input_dim), device="cpu")
+
         torch.onnx.export(
-            traced_script_module,
+            model,
             dummy_input_model,
             "ONNX.onnx",
             verbose=True,
