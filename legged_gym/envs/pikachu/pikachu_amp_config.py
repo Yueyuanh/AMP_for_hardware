@@ -51,7 +51,7 @@ class PikachuAMPCfg(LeggedRobotCfg):
         num_observations = 36
         num_privileged_obs = 42
         num_actions = 10
-        env_spacing = 1.0
+        env_spacing = 2.0
         reference_state_initialization = False
         reference_state_initialization_prob = 0.85
         amp_motion_files = MOTION_FILES
@@ -72,7 +72,7 @@ class PikachuAMPCfg(LeggedRobotCfg):
     class init_state(LeggedRobotCfg.init_state):
         pos = [0.0, 0.0, 0.16]  # x,y,z [m]
         # pos = [0.0, 0.0, 0.3]  # x,y,z [m]
-        rot = [0, -0.08, 0, 1]
+        rot = [0, 0, 0, 1]
 
         default_joint_angles = {
            'left_hip_yaw_joint' : 0. ,   
@@ -94,10 +94,6 @@ class PikachuAMPCfg(LeggedRobotCfg):
         effort = 0.93  # Nm
         # effort = 0.52  # Nm
 
-        stiffness_all = 2.54  # 3 [N*m/rad]
-        # stiffness_all = 2.54 * (2500 / 1100)
-        # damping_all = 0.095  # 0.1
-        damping_all = 0  # 0.1
 
         stiffness = {'hip_pitch': 80,
                      'hip_roll': 50,
@@ -229,9 +225,9 @@ class PikachuAMPCfg(LeggedRobotCfg):
         heading_command = False  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.14, 0.14]  # min max [m/s] # 0.14 ok
-            lin_vel_y = [-0.1, 0.1]  # min max [m/s] # O.1 ok
-            ang_vel_yaw = [-0.3, 0.3]  # min max [rad/s] # 0.3 ok
+            lin_vel_x = [-1, 1]  # min max [m/s] # 0.14 ok
+            lin_vel_y = [-1, 1]  # min max [m/s] # O.1 ok
+            ang_vel_yaw = [-0.5, 0.5]  # min max [rad/s] # 0.3 ok
             heading = [0, 0]
 
     class viewer(LeggedRobotCfg.viewer):
