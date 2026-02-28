@@ -156,6 +156,14 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
 
     return env_cfg, cfg_train
 
+def launch_tensorboard(directory_path):
+    from tensorboard import program
+
+    # learning visualizer
+    tb = program.TensorBoard()
+    tb.configure(argv=[None, "--logdir", directory_path, "--bind_all", "--port", "1231"])
+    url = tb.launch()
+    print("[info] Tensorboard session created: " + url)
 
 def get_args():
     custom_parameters = [
@@ -224,7 +232,12 @@ def get_args():
             "type": int,
             "help": "Maximum number of training iterations. Overrides config file if provided.",
         },
-    ]
+        {
+            "name": "--launch_tensorboard",
+            "action": "store_true",
+            "default": False,
+            "help": "Launch tensorboard for visualization",
+        },    ]
     # parse arguments
     args = gymutil.parse_arguments(
         description="RL Policy", custom_parameters=custom_parameters
