@@ -46,6 +46,16 @@ from rsl_rl.modules import ActorCritic, ActorCriticRecurrent
 from rsl_rl.utils.utils import Normalizer
 
 
+def _format_duration(seconds: float) -> str:
+    total_seconds = max(0, int(seconds))
+    days, rem = divmod(total_seconds, 24 * 3600)
+    hours, rem = divmod(rem, 3600)
+    minutes, secs = divmod(rem, 60)
+    if days > 0:
+        return f"{days}d {hours:02d}:{minutes:02d}:{secs:02d}"
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
 class AMPOnPolicyRunner:
     def __init__(self, env: VecEnv, train_cfg, log_dir=None, device="cpu"):
         self.cfg = train_cfg["runner"]
@@ -369,13 +379,15 @@ class AMPOnPolicyRunner:
             #   f"""{'Mean episode length/episode:':>{pad}} {locs['mean_trajectory_length']:.2f}\n""")
 
         log_string += ep_string
+        eta_seconds = self.tot_time / (locs["it"] + 1) * (
+            locs["num_learning_iterations"] - locs["it"]
+        )
         log_string += (
             f"""{'-' * width}\n"""
             f"""{'Total timesteps:':>{pad}} {self.tot_timesteps}\n"""
             f"""{'Iteration time:':>{pad}} {iteration_time:.2f}s\n"""
-            f"""{'Total time:':>{pad}} {self.tot_time:.2f}s\n"""
-            f"""{'ETA:':>{pad}} {self.tot_time / (locs['it'] + 1) * (
-                               locs['num_learning_iterations'] - locs['it']):.1f}s\n"""
+            f"""{'Total time:':>{pad}} {_format_duration(self.tot_time)}\n"""
+            f"""{'ETA:':>{pad}} {_format_duration(eta_seconds)}\n"""
         )
         print(log_string)
 
