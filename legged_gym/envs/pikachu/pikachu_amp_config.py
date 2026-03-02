@@ -150,10 +150,10 @@ class PikachuAMPCfg(LeggedRobotCfg):
         disable_gravity = False
         fix_base_link = False  # fix the base of the robot
 
-        damping = 0.095
+        damping = 0.0
         angular_damping = 0.0  # 0.01
-        armature = 0.0018
-        friction = 0.058
+        armature = 0.00
+        friction = 0.0
         thickness = 0.001
 
     class sim(LeggedRobotCfg.sim):
@@ -198,8 +198,8 @@ class PikachuAMPCfg(LeggedRobotCfg):
 
         class scales(LeggedRobotCfg.rewards.scales):
             termination = 0.0
-            tracking_lin_vel = 1.5 * 1.0 / (0.004 * 4)
-            tracking_ang_vel = 0.5 * 1.0 / (0.004 * 4)
+            tracking_lin_vel = 2.0 * 1.0 / (0.004 * 4)  # 1.5
+            tracking_ang_vel = 1.5 * 1.0 / (0.004 * 4)  # 0.5
             # tracking_lin_vel = 1.0
             # tracking_ang_vel = 0.5
             lin_vel_z = 0.0
@@ -252,7 +252,7 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         experiment_name = "pikachu_amp"
         algorithm_class_name = "AMPPPO"
         policy_class_name = "ActorCritic"
-        max_iterations = 500000  # number of policy updates
+        max_iterations = 50000  # number of policy updates
         save_interval = 200  # check for potential saves every this many iterations
 
         no_feet = NO_FEET
