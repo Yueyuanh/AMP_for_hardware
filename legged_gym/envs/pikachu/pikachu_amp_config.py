@@ -253,6 +253,7 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         algorithm_class_name = "AMPPPO"
         policy_class_name = "ActorCritic"
         max_iterations = 500000  # number of policy updates
+        save_interval = 200  # check for potential saves every this many iterations
 
         no_feet = NO_FEET
 
