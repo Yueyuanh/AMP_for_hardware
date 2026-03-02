@@ -2,7 +2,7 @@
   "LoopMode": "Wrap",
   "FrameDuration": 0.02,
   "EnableCycleOffsetPosition": true,
-  "EnableCycleOffsetRotation": false,
+  "EnableCycleOffsetRotation": true,
   "QuaternionOrder": "xyzw",
   "MotionWeight": 1,
   "Frames": [

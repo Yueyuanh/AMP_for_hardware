@@ -32,7 +32,7 @@ import glob
 
 from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobotCfgPPO
 
-MOTION_FILES = glob.glob("datasets/pikachu/pikachu_walk_raw/*")
+MOTION_FILES = glob.glob("datasets/pikachu/pikachu_walk/*")
 # MOTION_FILES = [
 #     # "datasets/bdx/placo_moves/bdx_walk_forward.txt", # OK
 #     "datasets/bdx/placo_moves_trunk_pitch/bdx_walk_forward.txt",
@@ -193,7 +193,7 @@ class PikachuAMPCfg(LeggedRobotCfg):
 
     class rewards(LeggedRobotCfg.rewards):
         soft_dof_pos_limit = 0.9
-        base_height_target = 0.16
+        base_height_target = 0.15
         tracking_sigma = 0.1  # tracking reward = exp(-error^2/sigma)
 
         class scales(LeggedRobotCfg.rewards.scales):
