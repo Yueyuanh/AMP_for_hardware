@@ -1,6 +1,7 @@
 import os
 import argparse
 import pandas as pd
+import matplotlib.pyplot as plt
 from tensorboard.backend.event_processing import event_accumulator
 
 
@@ -16,20 +17,52 @@ def find_event_files(log_dir):
 def load_events(event_file):
     ea = event_accumulator.EventAccumulator(
         event_file,
-        size_guidance={
-            event_accumulator.SCALARS: 0  # 读取全部数据
-        }
+        size_guidance={event_accumulator.SCALARS: 0}
     )
     ea.Reload()
     return ea
 
 
+def smooth_curve(values, window):
+    if window <= 1:
+        return values
+    return pd.Series(values).rolling(window, min_periods=1).mean()
+
+
+def plot_csv(csv_path, smooth_window):
+    df = pd.read_csv(csv_path)
+
+    if df.empty:
+        return
+
+    step = df["step"]
+    value = df["value"]
+
+    if smooth_window > 1:
+        value = smooth_curve(value, smooth_window)
+
+    plt.figure()
+    plt.plot(step, value)
+    plt.xlabel("Step")
+    plt.ylabel("Value")
+    plt.title(os.path.basename(csv_path).replace(".csv", ""))
+    plt.grid(True)
+
+    save_path = csv_path.replace(".csv", ".png")
+    plt.savefig(save_path)
+    plt.close()
+
+    print(f"Plotted: {save_path}")
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--log_dir", type=str, required=True,
-                        help="TensorBoard log directory")
-    parser.add_argument("--output_dir", type=str, default=None,
-                        help="Output CSV directory")
+    parser.add_argument("--log_dir", type=str, required=True)
+    parser.add_argument("--output_dir", type=str, default=None)
+    parser.add_argument("--plot", action="store_true",
+                        help="Plot all exported CSV curves")
+    parser.add_argument("--smooth", type=int, default=1,
+                        help="Moving average window size")
     args = parser.parse_args()
 
     log_dir = args.log_dir
@@ -45,7 +78,6 @@ def main():
 
     print(f"Found {len(event_files)} event file(s).")
 
-    # 用于合并多个event文件
     scalar_data = {}
 
     for event_file in event_files:
@@ -65,11 +97,8 @@ def main():
                     "wall_time": e.wall_time
                 })
 
-    # 导出
     for tag, data in scalar_data.items():
         df = pd.DataFrame(data)
-
-        # 按step排序
         df = df.sort_values(by="step")
 
         safe_tag = tag.replace("/", "_")
@@ -78,7 +107,10 @@ def main():
         df.to_csv(csv_path, index=False)
         print(f"Exported: {csv_path}")
 
-    print("\nAll scalars exported successfully.")
+        if args.plot:
+            plot_csv(csv_path, args.smooth)
+
+    print("\nAll scalars processed successfully.")
 
 
 if __name__ == "__main__":
