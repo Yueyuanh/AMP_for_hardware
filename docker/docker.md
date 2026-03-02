@@ -1,1 +1,1 @@
-rsync -avz finnox-4090@10.10.41.174:~/RL/Pikachu/unitree_rl_gym_go2/AMP_for_hardware/logs/pikachu_amp/Feb27_12-33-25_ /home/finnox/Pikachu/AMP/AMP_for_BDX/AMP_for_hardware/logs/pikachu_amp/
+rsync -avz finnox-4090@192.168.0.6:~/RL/Pikachu/unitree_rl_gym_go2/AMP_for_hardware/logs/pikachu_amp/Feb27_12-33-25_ /home/finnox/Pikachu/AMP_for_BDX/AMP_for_hardware/logs/pikachu_amp/

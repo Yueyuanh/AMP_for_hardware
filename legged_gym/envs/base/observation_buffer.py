@@ -47,6 +47,7 @@ class ObservationBuffer:
         return torch.cat(obs, dim=-1)
 
     def get_lagged_obs(self, indices):
+        indices = indices.view(-1).to(device=self.device, dtype=torch.long)
         indices_expanded = indices.unsqueeze(1).expand(-1, self.num_obs)
         gather_indices = (
             indices_expanded * self.num_obs

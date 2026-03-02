@@ -12,8 +12,21 @@ from isaacgym import gymtorch, gymapi, gymutil
 
 import numpy as np
 import torch
-from FramesViewer.viewer import Viewer
-import FramesViewer.utils as fv_utils
+try:
+    from FramesViewer.viewer import Viewer
+    import FramesViewer.utils as fv_utils
+except Exception:
+    Viewer = None
+    fv_utils = None
+
+
+def _can_use_frames_viewer():
+    try:
+        from OpenGL.GLUT import glutInit
+
+        return bool(glutInit)
+    except Exception:
+        return False
 
 
 def play(args):
@@ -69,10 +82,22 @@ def play(args):
     t = 0.0
     traj_idx = 0
 
-    fv = Viewer()
-    fv.start()
+    fv = None
+    if Viewer is not None and _can_use_frames_viewer():
+        try:
+            fv = Viewer()
+            fv.start()
+            if not hasattr(fv, "pushFrame"):
+                print("FramesViewer disabled: Viewer.pushFrame is unavailable.")
+                fv = None
+        except Exception as e:
+            print(f"FramesViewer disabled: failed to initialize ({e}).")
+            fv = None
+    else:
+        print("FramesViewer disabled: package or GLUT is unavailable.")
 
-    while traj_idx < len(env.amp_loader.trajectory_lens):
+    num_trajs = len(env.amp_loader.trajectory_lens)
+    while traj_idx < num_trajs:
         actions = torch.zeros(
             (env_cfg.env.num_envs, env.num_actions), device=env.sim_device
         )
@@ -82,6 +107,8 @@ def play(args):
         ) >= env.amp_loader.trajectory_lens[traj_idx]:
             traj_idx += 1
             t = 0
+            if traj_idx >= num_trajs:
+                break
         else:
             t += env.dt
 
@@ -145,7 +172,18 @@ def play(args):
                 np.array([traj_idx]), np.array([t])
             )
         )
-        amp_foot_obs = env.get_amp_observations()[0, 15 : 15 + 6]
+        amp_obs = env.get_amp_observations()[0]
+        num_dof = env.dof_pos.shape[1]
+        obs_offset = 0
+        dof_pos_obs = amp_obs[obs_offset : obs_offset + num_dof]
+        obs_offset += num_dof
+        amp_foot_obs = amp_obs[obs_offset : obs_offset + 6]
+        obs_offset += 6
+        base_lin_vel_obs = amp_obs[obs_offset : obs_offset + 3]
+        obs_offset += 3
+        base_ang_vel_obs = amp_obs[obs_offset : obs_offset + 3]
+        obs_offset += 3
+        dof_vel_obs = amp_obs[obs_offset : obs_offset + num_dof]
         # print("foot obs", amp_foot_obs)
         # print("foot data", foot_pos_amp[0])
         # print(
@@ -154,32 +192,38 @@ def play(args):
         # )
         # print("")
 
-        data_left_foot_pos = foot_pos_amp[0, 0:3].cpu().numpy()
-        data_right_foot_pos = foot_pos_amp[0, 3:6].cpu().numpy()
-        data_left_foot_pose = fv_utils.make_pose(
-            data_left_foot_pos, np.array([0, 0, 0])
-        )
-        data_right_foot_pose = fv_utils.make_pose(
-            data_right_foot_pos, np.array([0, 0, 0])
-        )
-        obs_left_foot_pos = amp_foot_obs[0:3].cpu().numpy()
-        obs_right_foot_pos = amp_foot_obs[3:6].cpu().numpy()
-        obs_left_foot_pose = fv_utils.make_pose(obs_left_foot_pos, np.array([0, 0, 0]))
-        obs_right_foot_pose = fv_utils.make_pose(
-            obs_right_foot_pos, np.array([0, 0, 0])
-        )
+        if fv is not None and fv_utils is not None:
+            data_left_foot_pos = foot_pos_amp[0, 0:3].cpu().numpy()
+            data_right_foot_pos = foot_pos_amp[0, 3:6].cpu().numpy()
+            data_left_foot_pose = fv_utils.make_pose(
+                data_left_foot_pos, np.array([0, 0, 0])
+            )
+            data_right_foot_pose = fv_utils.make_pose(
+                data_right_foot_pos, np.array([0, 0, 0])
+            )
+            obs_left_foot_pos = amp_foot_obs[0:3].cpu().numpy()
+            obs_right_foot_pos = amp_foot_obs[3:6].cpu().numpy()
+            obs_left_foot_pose = fv_utils.make_pose(
+                obs_left_foot_pos, np.array([0, 0, 0])
+            )
+            obs_right_foot_pose = fv_utils.make_pose(
+                obs_right_foot_pos, np.array([0, 0, 0])
+            )
 
-        fv.pushFrame(data_left_foot_pose, "left_foot")
-        fv.pushFrame(data_right_foot_pose, "right_foot")
-        fv.pushFrame(obs_left_foot_pose, "left_foot_obs")
-        fv.pushFrame(obs_right_foot_pose, "right_foot_obs")
+            try:
+                fv.pushFrame(data_left_foot_pose, "left_foot")
+                fv.pushFrame(data_right_foot_pose, "right_foot")
+                fv.pushFrame(obs_left_foot_pose, "left_foot_obs")
+                fv.pushFrame(obs_right_foot_pose, "right_foot_obs")
+            except Exception as e:
+                print(f"FramesViewer disabled during replay ({e}).")
+                fv = None
 
         dof_pos_data = env.amp_loader.get_joint_pose_batch(
             env.amp_loader.get_full_frame_at_time_batch(
                 np.array([traj_idx]), np.array([t])
             )
         )
-        dof_pos_obs = env.get_amp_observations()[0, 0:15]
         # print("dof pos obs", dof_pos_obs)
         # print("dof pos data", dof_pos_data[0])
         print(
@@ -193,7 +237,6 @@ def play(args):
                 np.array([traj_idx]), np.array([t])
             )
         )
-        dof_vel_obs = env.get_amp_observations()[0, 27 : 27 + 15]
         print(
             "dof vel diff",
             torch.round(abs(dof_vel_data[0] - dof_vel_obs), decimals=2).cpu().numpy(),
@@ -205,7 +248,6 @@ def play(args):
                 np.array([traj_idx]), np.array([t])
             )
         )
-        base_lin_vel_obs = env.get_amp_observations()[0, 21 : 21 + 3]
         # print("base lin vel obs", base_lin_vel_obs)
         # print("base lin vel data", base_lin_vel_data[0])
         print(
@@ -221,7 +263,6 @@ def play(args):
                 np.array([traj_idx]), np.array([t])
             )
         )
-        base_ang_vel_obs = env.get_amp_observations()[0, 24 : 24 + 3]
         # base_ang_vel_obs = env.base_ang_vel[0]
         # print("base ang vel obs", base_ang_vel_obs)
         # print("base ang vel data", base_ang_vel_data[0])
@@ -271,7 +312,8 @@ def play(args):
             video.write(img)
             img_idx += 1
 
-    video.release()
+    if video is not None:
+        video.release()
 
 
 if __name__ == "__main__":

@@ -427,7 +427,9 @@ class LeggedRobot(BaseTask):
             )
 
             self.randomized_indices = (
-                ((self.randomized_observation_lag / 1000) / self.dt).long().squeeze()
+                ((self.randomized_observation_lag / 1000) / self.dt)
+                .long()
+                .squeeze(-1)
             )
 
     def compute_reward(self):
@@ -555,7 +557,8 @@ class LeggedRobot(BaseTask):
         if not self.cfg.env.no_feet:
             foot_pos = []
             with torch.no_grad():
-                # BDX
+                
+                # pikachu
                 foot_pos.append(
                     self.chain_ee[0]
                     .forward_kinematics(self.dof_pos[:, 0:5])
@@ -566,6 +569,17 @@ class LeggedRobot(BaseTask):
                     .forward_kinematics(self.dof_pos[:, 5:10])
                     .get_matrix()[:, :3, 3]
                 )
+                # # BDX
+                # foot_pos.append(
+                #     self.chain_ee[0]
+                #     .forward_kinematics(self.dof_pos[:, 0:5])
+                #     .get_matrix()[:, :3, 3]
+                # )
+                # foot_pos.append(
+                #     self.chain_ee[1]
+                #     .forward_kinematics(self.dof_pos[:, 10:15])
+                #     .get_matrix()[:, :3, 3]
+                # )
                 # A1
                 # for i, chain_ee in enumerate(self.chain_ee):
                 #     foot_pos.append(
@@ -1355,7 +1369,9 @@ class LeggedRobot(BaseTask):
                 self.num_envs, 1, device=self.device
             )
 
-            self.randomized_indices = torch.zeros(self.num_envs, 1, device=self.device)
+            self.randomized_indices = torch.zeros(
+                self.num_envs, device=self.device, dtype=torch.long
+            )
 
             self.gym.set_asset_rigid_shape_properties(robot_asset, rigid_shape_props)
             anymal_handle = self.gym.create_actor(
