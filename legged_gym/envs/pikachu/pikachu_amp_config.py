@@ -150,10 +150,10 @@ class PikachuAMPCfg(LeggedRobotCfg):
         disable_gravity = False
         fix_base_link = False  # fix the base of the robot
 
-        damping = 0.0
+        damping = 0.095
         angular_damping = 0.0  # 0.01
-        armature = 0.00
-        friction = 0.0
+        armature = 0.0018
+        friction = 0.058
         thickness = 0.001
 
     class sim(LeggedRobotCfg.sim):
@@ -198,8 +198,8 @@ class PikachuAMPCfg(LeggedRobotCfg):
 
         class scales(LeggedRobotCfg.rewards.scales):
             termination = 0.0
-            tracking_lin_vel = 2.0 * 1.0 / (0.004 * 4)  # 1.5
-            tracking_ang_vel = 1.5 * 1.0 / (0.004 * 4)  # 0.5
+            tracking_lin_vel = 1.5 * 1.0 / (0.004 * 4)
+            tracking_ang_vel = 0.5 * 1.0 / (0.004 * 4)
             # tracking_lin_vel = 1.0
             # tracking_ang_vel = 0.5
             lin_vel_z = 0.0
