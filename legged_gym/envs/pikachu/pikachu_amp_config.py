@@ -216,6 +216,8 @@ class PikachuAMPCfg(LeggedRobotCfg):
             stand_still = 0.0
             dof_pos_limits = 0.0
             action_smoothness = -0.002
+            feet_air_time= 0.1
+            stumble = -0.01
 
     class commands:
         curriculum = False  # False
