@@ -557,7 +557,7 @@ class LeggedRobot(BaseTask):
         if not self.cfg.env.no_feet:
             foot_pos = []
             with torch.no_grad():
-                
+
                 # pikachu
                 foot_pos.append(
                     self.chain_ee[0]
@@ -694,10 +694,11 @@ class LeggedRobot(BaseTask):
                 self.dof_pos_limits[i, 0] = props["lower"][i].item()
                 self.dof_pos_limits[i, 1] = props["upper"][i].item()
                 self.dof_vel_limits[i] = props["velocity"][i].item()
-                if self.cfg.control.override_effort:
-                    self.torque_limits[i] = self.cfg.control.effort
-                else:
-                    self.torque_limits[i] = props["effort"][i].item()
+                self.torque_limits[i] = props["effort"][i].item()
+                # if self.cfg.control.override_effort:
+                #     self.torque_limits[i] = self.cfg.control.effort
+                # else:
+                #     self.torque_limits[i] = props["effort"][i].item()
                 # soft limits
                 m = (self.dof_pos_limits[i, 0] + self.dof_pos_limits[i, 1]) / 2
                 r = self.dof_pos_limits[i, 1] - self.dof_pos_limits[i, 0]

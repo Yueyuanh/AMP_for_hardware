@@ -90,9 +90,9 @@ class PikachuAMPCfg(LeggedRobotCfg):
     class control(LeggedRobotCfg.control):
         # PD Drive parameters:
         control_type = "P"
-        override_effort = False
-        effort = 0.93  # Nm
-        # effort = 0.52  # Nm
+        # override_effort = False
+        # # effort = 0.93  # Nm
+        # # effort = 0.52  # Nm
 
 
         stiffness = {'hip_pitch': 80,
@@ -132,17 +132,17 @@ class PikachuAMPCfg(LeggedRobotCfg):
 
         # mesh_type = "plane"
         measure_heights = False
-        static_friction = 5.0  # 5
-        dynamic_friction = 5.0  # 5
+        static_friction = 1.0  # 5
+        dynamic_friction = 1.0  # 5
 
     class asset(LeggedRobotCfg.asset):
         file = "{LEGGED_GYM_ROOT_DIR}/resources/robots/Pikachu_V025/urdf/Pikachu_V025_flat.urdf"
-        foot_name = "foot"
+        # foot_name = "foot"
+        # end link
+        foot_name = "ankle"
         penalize_contacts_on = []
         terminate_after_contacts_on = [
-            "base_link",
-            # "leg_module",
-            # "leg_module_2",
+        "base_link"
         ]
         flip_visual_attachments = False
         self_collisions = 1  # 1 to disable, 0 to enable...bitwise filter
@@ -150,14 +150,14 @@ class PikachuAMPCfg(LeggedRobotCfg):
         disable_gravity = False
         fix_base_link = False  # fix the base of the robot
 
-        damping = 0.095
         angular_damping = 0.0  # 0.01
+        thickness = 0.001
+        damping = 0.1
         armature = 0.0018
         friction = 0.058
-        thickness = 0.001
 
     class sim(LeggedRobotCfg.sim):
-        dt = 0.0083333  # 120hz
+        dt = 0.005  # 120hz
         # dt = 0.00416665  # 240hz
         substeps = 1
 
@@ -174,7 +174,7 @@ class PikachuAMPCfg(LeggedRobotCfg):
         damping_multiplier_range = [0.99, 1.01]
         randomize_torques = True
         torque_multiplier_range = [0.95, 1.05]
-        randomize_com = True
+        randomize_com = True # 随机质心
         com_range = [-0.01, 0.01]
         observation_lag = True
         observation_lag_range = [0, 1]  # ms
@@ -225,9 +225,9 @@ class PikachuAMPCfg(LeggedRobotCfg):
         heading_command = False  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.5, 0.5]  # min max [m/s] # 0.14 ok
-            lin_vel_y = [-0.5, 0.5]  # min max [m/s] # 0.1 ok
-            ang_vel_yaw = [-0.5, 0.5]  # min max [rad/s] # 0.3 ok
+            lin_vel_x = [-0.2, 0.2]  # min max [m/s] # 0.14 ok
+            lin_vel_y = [-0.2, 0.2]  # min max [m/s] # 0.1 ok
+            ang_vel_yaw = [-0.2, 0.2]  # min max [rad/s] # 0.3 ok
             heading = [0, 0]
 
     class viewer(LeggedRobotCfg.viewer):
@@ -253,7 +253,7 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         algorithm_class_name = "AMPPPO"
         policy_class_name = "ActorCritic"
         max_iterations = 50000  # number of policy updates
-        save_interval = 200  # check for potential saves every this many iterations
+        save_interval = 50  # check for potential saves every this many iterations
 
         no_feet = NO_FEET
 
