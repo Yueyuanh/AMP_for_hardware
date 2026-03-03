@@ -70,7 +70,7 @@ class PikachuAMPCfg(LeggedRobotCfg):
         include_history_steps = None if num_rma_obs == 0 else 15
 
     class init_state(LeggedRobotCfg.init_state):
-        pos = [0.0, 0.0, 0.16]  # x,y,z [m]
+        pos = [0.0, 0.0, 0.15]  # x,y,z [m]
         # pos = [0.0, 0.0, 0.3]  # x,y,z [m]
         rot = [0, 0, 0, 1]
 
@@ -225,8 +225,8 @@ class PikachuAMPCfg(LeggedRobotCfg):
         heading_command = False  # if true: compute ang vel command from heading error
 
         class ranges:
-            lin_vel_x = [-0.2, 0.2]  # min max [m/s] # 0.14 ok
-            lin_vel_y = [-0.2, 0.2]  # min max [m/s] # 0.1 ok
+            lin_vel_x = [-0.185, 0.185]  # min max [m/s] # 0.14 ok
+            lin_vel_y = [-0.185, 0.185]  # min max [m/s] # 0.1 ok
             ang_vel_yaw = [-0.2, 0.2]  # min max [rad/s] # 0.3 ok
             heading = [0, 0]
 
@@ -253,7 +253,7 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         algorithm_class_name = "AMPPPO"
         policy_class_name = "ActorCritic"
         max_iterations = 50000  # number of policy updates
-        save_interval = 50  # check for potential saves every this many iterations
+        save_interval = 500  # check for potential saves every this many iterations
 
         no_feet = NO_FEET
 
