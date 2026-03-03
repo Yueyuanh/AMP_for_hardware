@@ -260,10 +260,10 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         amp_reward_coef = 2.0  # 2.0
         amp_motion_files = MOTION_FILES
         amp_num_preload_transitions = 2000000
-        amp_task_reward_lerp = 0.1  # 0.3 0.1
+        amp_task_reward_lerp = 0.3  # 0.3 0.1
         amp_discr_hidden_dims = [1024, 512]
 
-        disc_grad_penalty = 5  # original 10
+        disc_grad_penalty = 1  # original 10 , bdx 5
 
         # Large incentivizes exploration
         # min_normalized_std = [0.02] * 15  # 0.02
