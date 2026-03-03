@@ -194,7 +194,7 @@ class PikachuAMPCfg(LeggedRobotCfg):
     class rewards(LeggedRobotCfg.rewards):
         soft_dof_pos_limit = 0.9
         base_height_target = 0.15
-        tracking_sigma = 0.1  # tracking reward = exp(-error^2/sigma)
+        tracking_sigma = 0.25  # tracking reward = exp(-error^2/sigma)
 
         class scales(LeggedRobotCfg.rewards.scales):
             termination = 0.0
