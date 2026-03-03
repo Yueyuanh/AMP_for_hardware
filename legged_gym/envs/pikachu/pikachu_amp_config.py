@@ -239,6 +239,16 @@ class PikachuAMPCfg(LeggedRobotCfg):
 class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
     runner_class_name = "AMPOnPolicyRunner"
 
+    class policy:
+        init_noise_std = 0.8 # 0.8
+        actor_hidden_dims = [512, 256, 128]
+        critic_hidden_dims = [512, 256, 128]
+        activation = "elu"  # can be elu, relu, selu, crelu, lrelu, tanh, sigmoid
+        # only for 'ActorCriticRecurrent':
+        # rnn_type = 'lstm'
+        # rnn_hidden_size = 512
+        # rnn_num_layers = 1
+
     class algorithm(LeggedRobotCfgPPO.algorithm):
         entropy_coef = 0.01
         amp_replay_buffer_size = 1000000
@@ -260,7 +270,7 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         amp_reward_coef = 2.0  # 2.0
         amp_motion_files = MOTION_FILES
         amp_num_preload_transitions = 2000000
-        amp_task_reward_lerp = 0.3  # 0.3 0.1
+        amp_task_reward_lerp = 0.5  # 0.3 0.1
         amp_discr_hidden_dims = [1024, 512]
 
         disc_grad_penalty = 1  # original 10 , bdx 5
