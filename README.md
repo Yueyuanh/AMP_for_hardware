@@ -29,7 +29,52 @@ In `legged_gym/envs/bdx/bdx_amp_config.py`
 - `stiffness_all`, `damping_all` : Still trying to find the optimal values.
 - `action_scale` : has a significant effect on training stability. Default is `0.25`
 - `disc_grad_penalty` : I found it works best with `0.01`, but the original paper suggests `10`. There seems to be implementation differences between the original code and this one, such that the scale of this parameter is different.
+```
+disc_grad_penalty 在这个工程里是判别器梯度惩罚系数，用于约束 AMP 判别器对 expert 样本的输入梯度，防止判别器过陡、过拟合、训练不稳。
+
+在你这份实现中，公式是：
+
+先算判别器对 expert 输入的梯度 g = ∂D/∂x
+惩罚项：grad_pen = lambda * (||g||2 - 0)^2
+也就是把梯度范数往 0 拉（不是往 1 拉）
+代码位置：
+
+计算惩罚：amp_discriminator.py (line 51)
+lambda_ 就是 disc_grad_penalty：amp_ppo.py (line 376)
+并且它还会乘 disc_coef 进入总损失：amp_ppo.py (line 395)
+所以有效强度大致是：disc_coef * disc_grad_penalty。
+这也是你看到“这里 0.01 有效、论文里 10”会不一致的重要原因之一：实现细节和总损失缩放不同。
+```
 - `amp_task_reward_lerp`: This parameter controls the balance between the task reward and the adversarial reward. Default is `0.3`
+```
+amp_task_reward_lerp 是奖励混合系数，在每一步把 AMP 判别器奖励和环境任务奖励做线性插值。
+
+代码公式在 amp_discriminator.py (line 70)：
+
+r = (1 - lerp) * r_amp + lerp * r_task
+
+其中：
+
+lerp 就是 amp_task_reward_lerp
+r_amp 是判别器奖励（先乘 amp_reward_coef）
+amp_discriminator.py (line 63)
+r_task 是环境原始任务奖励
+所以 amp_task_reward_lerp=0.3 的实际含义是：
+
+70% 来自 AMP 奖励
+30% 来自任务奖励
+同时要注意权重不是只有这一个参数，还受 amp_reward_coef 影响：
+
+r_amp 先被 amp_reward_coef 放大/缩小，再参与 70/30 混合。
+因此“实际占比”是 lerp 和 amp_reward_coef 共同决定的。
+常见取值理解：
+
+0.0：纯 AMP（只学模仿风格）
+0.3：偏模仿，兼顾任务（你现在这个）
+0.5：任务/模仿各一半（前提是量纲接近）
+1.0：纯任务（等于关掉 AMP 奖励）
+```
+
 - `MOTION_FILES`: Paths to the reference motion files. They are generated using this script : https://github.com/apirrone/mini_BDX/blob/main/experiments/placo/placo_record_amp.py (TODO document this)
 
 ## Tuning the PD controller
