@@ -132,8 +132,8 @@ class PikachuAMPCfg(LeggedRobotCfg):
 
         # mesh_type = "plane"
         measure_heights = False
-        static_friction = 1.0  # 5
-        dynamic_friction = 1.0  # 5
+        static_friction = 5.0  # 5
+        dynamic_friction = 5.0  # 5
 
     class asset(LeggedRobotCfg.asset):
         file = "{LEGGED_GYM_ROOT_DIR}/resources/robots/Pikachu_V025/urdf/Pikachu_V025_flat.urdf"
@@ -194,12 +194,12 @@ class PikachuAMPCfg(LeggedRobotCfg):
     class rewards(LeggedRobotCfg.rewards):
         soft_dof_pos_limit = 0.9
         base_height_target = 0.15
-        tracking_sigma = 0.25  # tracking reward = exp(-error^2/sigma)
+        tracking_sigma = 0.1  # tracking reward = exp(-error^2/sigma)
 
         class scales(LeggedRobotCfg.rewards.scales):
             termination = 0.0
-            tracking_lin_vel = 1.5 * 1.0 / (0.004 * 4)
-            tracking_ang_vel = 0.5 * 1.0 / (0.004 * 4)
+            tracking_lin_vel = 2 * 1.0 / (0.004 * 4)
+            tracking_ang_vel = 1 * 1.0 / (0.004 * 4)
             # tracking_lin_vel = 1.0
             # tracking_ang_vel = 0.5
             lin_vel_z = 0.0
