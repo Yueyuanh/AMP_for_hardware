@@ -207,19 +207,19 @@ class PikachuAMPCfg(LeggedRobotCfg):
             lin_vel_z = 0.0
             ang_vel_xy = 0.0
             orientation = -0.0 # -1.0 防止前后摇摆,过大就会过于害怕摇摆，无法迈出第一步
-            torques = -0.0000  # -0.000025
+            torques = -0.000025  # -0.000025
             dof_vel = 0.0
             dof_acc = 0.0
-            base_height = -0.0  # -1.0
+            base_height = -1.0  # -1.0
             feet_air_time = 0.0
             collision = 0.0
             feet_stumble = 0.0
-            action_rate = -0.0  # -1.0
+            action_rate = -1.0  # -1.0
             stand_still = 0.0
             dof_pos_limits = 0.0
-            action_smoothness = -0.00
-            feet_air_time= 0.0
-            stumble = -0.0
+            action_smoothness = -0.002
+            # feet_air_time= 1.0
+            # stumble = -0.0
 
     class commands:
         curriculum = False  # False
