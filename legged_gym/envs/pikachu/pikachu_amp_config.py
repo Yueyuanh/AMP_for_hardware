@@ -152,7 +152,7 @@ class PikachuAMPCfg(LeggedRobotCfg):
         fix_base_link = False  # fix the base of the robot
 
         angular_damping = 0.0  # 0.01
-        thickness = 0.001
+        thickness = 0.01 # 0.001
         damping = 0.1
         armature = 0.0018
         friction = 0.058
