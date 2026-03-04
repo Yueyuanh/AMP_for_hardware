@@ -200,7 +200,7 @@ class PikachuAMPCfg(LeggedRobotCfg):
 
         class scales(LeggedRobotCfg.rewards.scales):
             termination = 0.0
-            tracking_lin_vel = 2 * 1.0 / (0.004 * 4)
+            tracking_lin_vel = 5 * 1.0 / (0.004 * 4)
             tracking_ang_vel = 1 * 1.0 / (0.004 * 4)
             # tracking_lin_vel = 1.0
             # tracking_ang_vel = 0.5
@@ -233,6 +233,11 @@ class PikachuAMPCfg(LeggedRobotCfg):
             lin_vel_y =   [-0.185, 0.185]  # min max [m/s] # 0.1 ok
             ang_vel_yaw = [-0.185, 0.185]  # min max [rad/s] # 0.3 ok
             heading = [0, 0]
+
+            # lin_vel_x =   [-0.5, 0.5]  # min max [m/s] # 0.14 ok
+            # lin_vel_y =   [-0.5, 0.5]  # min max [m/s] # 0.1 ok
+            # ang_vel_yaw = [-0.5, 0.5]  # min max [rad/s] # 0.3 ok
+            # heading = [0, 0]
 
     class viewer(LeggedRobotCfg.viewer):
         ref_env = 0
@@ -274,11 +279,11 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         amp_reward_coef = 2.0  # 2.0
         amp_motion_files = MOTION_FILES
         amp_num_preload_transitions = 2000000
-        amp_task_reward_lerp = 0.5  # 0.3 0.1
+        amp_task_reward_lerp = 0.3  # 0.3 0.1
         amp_discr_hidden_dims = [1024, 512]
 
         # 判别器梯度惩罚系数
-        disc_grad_penalty = 10  # original 10 , bdx 5
+        disc_grad_penalty = 5 # original 10 , bdx 5
 
         # Large incentivizes exploration
         # min_normalized_std = [0.02] * 15  # 0.02
