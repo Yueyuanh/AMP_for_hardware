@@ -206,20 +206,20 @@ class PikachuAMPCfg(LeggedRobotCfg):
             # tracking_ang_vel = 0.5
             lin_vel_z = 0.0
             ang_vel_xy = 0.0
-            orientation = -0.1 # -1.0 防止前后摇摆,过大就会过于害怕摇摆，无法迈出第一步
-            torques = -0.000025  # -0.000025
+            orientation = -0.0 # -1.0 防止前后摇摆,过大就会过于害怕摇摆，无法迈出第一步
+            torques = -0.0000  # -0.000025
             dof_vel = 0.0
             dof_acc = 0.0
-            base_height = -1.0  # -1.0
+            base_height = -0.0  # -1.0
             feet_air_time = 0.0
             collision = 0.0
             feet_stumble = 0.0
-            action_rate = -1.0  # -1.0
+            action_rate = -0.0  # -1.0
             stand_still = 0.0
             dof_pos_limits = 0.0
-            action_smoothness = -0.002
-            feet_air_time= 0.1
-            stumble = -0.01
+            action_smoothness = -0.00
+            feet_air_time= 0.0
+            stumble = -0.0
 
     class commands:
         curriculum = False  # False
@@ -274,7 +274,7 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         amp_reward_coef = 2.0  # 2.0
         amp_motion_files = MOTION_FILES
         amp_num_preload_transitions = 2000000
-        amp_task_reward_lerp = 0.95  # 0.3 0.1
+        amp_task_reward_lerp = 0.5  # 0.3 0.1
         amp_discr_hidden_dims = [1024, 512]
 
         # 判别器梯度惩罚系数
