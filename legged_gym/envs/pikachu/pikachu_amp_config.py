@@ -136,8 +136,9 @@ class PikachuAMPCfg(LeggedRobotCfg):
         dynamic_friction = 5.0  # 5
 
     class asset(LeggedRobotCfg.asset):
-        # file = "{LEGGED_GYM_ROOT_DIR}/resources/robots/Pikachu_V025/urdf/Pikachu_V025_flat.urdf"
-        file = "{LEGGED_GYM_ROOT_DIR}/resources/robots/Pikachu_V025/urdf/Pikachu_V025.urdf"
+        file = "{LEGGED_GYM_ROOT_DIR}/resources/robots/Pikachu_V025/urdf/Pikachu_V025_flat.urdf"
+        # file = "{LEGGED_GYM_ROOT_DIR}/resources/robots/Pikachu_V025/urdf/Pikachu_V025.urdf"
+        # nonflat 容易
         # foot_name = "foot"
         # end link
         foot_name = "ankle"
