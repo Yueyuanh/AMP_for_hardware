@@ -277,7 +277,7 @@ class PikachuAMPCfgPPO(LeggedRobotCfgPPO):
         amp_discr_hidden_dims = [1024, 512]
 
         # 判别器梯度惩罚系数
-        disc_grad_penalty = 5  # original 10 , bdx 5
+        disc_grad_penalty = 10  # original 10 , bdx 5
 
         # Large incentivizes exploration
         # min_normalized_std = [0.02] * 15  # 0.02
