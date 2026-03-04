@@ -514,7 +514,8 @@ class LeggedRobot(BaseTask):
             self.commands[:, 2] = ang_vel
             print(self.commands[0])
             pygame.event.pump()  # process event queue
-
+        
+        print(self.commands[0])
         self.privileged_obs_buf = torch.cat(
             (
                 self.base_lin_vel * self.obs_scales.lin_vel,
